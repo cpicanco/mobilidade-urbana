@@ -61,6 +61,11 @@ def get_data_filenames(src_directory, gaze_file_filter='*.csv'):
     return [item for item in sorted(glob_lists)]
 
 def calculate_concordance(target_files):
+    """
+    target_files = list of string
+    exemple:
+        calculate_concordance([full_filepath1, full_filepath2 .. full_filepath3]) 
+    """
     minute_size = 60000
     def bikes_per_minute(observations, video_length):
         counts_per_minute = []
