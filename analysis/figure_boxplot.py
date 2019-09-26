@@ -1,6 +1,6 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 '''
-    Copyright (C) 2019 Rafael Picanço e Miguel Abdala Maciel.
+    Copyright (C) 2019 Rafael Picanço e Abdala Maciel.
 
     The present file is distributed under the terms of the GNU General Public License (GPL v3.0).
     You should have received a copy of the GNU General Public License

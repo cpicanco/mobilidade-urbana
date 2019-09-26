@@ -37,6 +37,10 @@ def load_header_data(path):
         place = next(reader)
         turn = next(reader)
         day = next(reader)
+        if 'oliveira-paiva' in path:
+            video_day = next(reader)
+        else:
+            video_day = 'None'
         observer = next(reader)
         phase = next(reader)
         duration = next(reader)
@@ -45,6 +49,7 @@ def load_header_data(path):
         'place':normalize_string(place[1]),
         'turn':normalize_string(turn[1]),
         'day':normalize_string(day[1]),
+        'video_day':normalize_string(video_day[1]),
         'observer':normalize_string(observer[1]),
         'phase':normalize_string(phase[1]),
         'duration':normalize_string(duration[1]),
@@ -61,11 +66,6 @@ def get_data_filenames(src_directory, gaze_file_filter='*.csv'):
     return [item for item in sorted(glob_lists)]
 
 def calculate_concordance(target_files):
-    """
-    target_files = list of string
-    exemple:
-        calculate_concordance([full_filepath1, full_filepath2 .. full_filepath3]) 
-    """
     minute_size = 60000
     def bikes_per_minute(observations, video_length):
         counts_per_minute = []
