@@ -22,12 +22,9 @@ Data analysis scripts for Abdala's urban mobility research
 10. Activate the virtual environment in VSCode when it prompts you, or do it manually in the VSCode PowerShell: .\\.venv\\Scripts\\activate.
 11. Install project dependencies:
     ```
-    py -m pip install -r .\\analysis\\requirements.txt
+    py -m pip install -r .\\requirements.txt
     ```
-12. Copy raw data to corresponding folders:
+12. Copy raw data to corresponding folders (Contact us for the raw data.):
     - oliveira-paiva
     - rogaciano-leite
     - virgilio-tavora
-
-## raw data access
-Contact us for obtaining the raw data.
