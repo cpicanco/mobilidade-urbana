@@ -4,7 +4,7 @@ Data analysis scripts for Abdala's urban mobility research
 ## installation
 
 1. Install Git.
-2. Install Python (3.11.2 or higher) with Pip (https://www.python.org/).
+2. Install Python (3.13.2 or higher) with Pip (https://www.python.org/).
 3. Install VSCode (https://code.visualstudio.com/).
 4. Open VSCode.
 5. Click on the "Source Control" option or press CTRL+SHIFT+G on your keyboard.

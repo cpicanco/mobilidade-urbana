@@ -12,22 +12,23 @@ import calendar
 from glob import glob
 
 import numpy as np
+import pandas as pd
 import dateutil.parser as dateparser
 
 def load_observation(path, version='1.0'):
     """
-        Returns a numpy array with observations (time is in ms) where:
+    Returns a numpy array with observations (time is in ms) where:
 
-        keytime,
-            is the monotonically increasing time of key presses.
+    keytime,
+        is the monotonically increasing time of key presses.
 
-        videotime,
-            is the frame time of the video captured by a key press.
+    videotime,
+        is the frame time of the video captured by a key press.
 
-        Participants could pause, rewind and resume the video at any time.
-        Hence, "videotime" here may not be monotonic and may repeat.
+    Participants could pause, rewind and resume the video at any time.
+    Hence, "videotime" here may not be monotonic and may repeat.
 
-        We must use videotime to calculate concordance.
+    We must use videotime to calculate concordance.
     """
     if not os.path.isfile(path):
         raise 'Path was not found:'+path
@@ -86,8 +87,8 @@ def get_data_filenames(src_directory, gaze_file_filter='*.csv'):
 
 def bikes_per_minute(observations:np.array, video_length:int, minute_size:int = 60000):
     """
-        Count the number of bikes per minute.
-        We use numpy vectorization, don't need to sort "observations".
+    Count the number of bikes per minute.
+    We use numpy vectorization, don't need to sort "observations".
     """
     counts_per_minute = []
     for minute in range(1, (video_length//minute_size)+1):
@@ -118,6 +119,7 @@ def calculate_concordance(filename1:str, filename2:str, per_minute_array=False):
     if per_minute_array:
         return {'concordance': concordances,
                 'count': [count1, count2],
+                'count_minutes':[counts_per_minute1, counts_per_minute2],
                 'count_min':np.min([count1, count2]),
                 'count_max':np.max([count1, count2]),
                 'files':[filename1, filename2],
@@ -160,8 +162,8 @@ def calculate_concordance_pairwise(target_tags:list[Tag], per_minute_array=False
     """
     size = len(target_tags)
     if size < 2:
-        print('Warning: Can''t calculate concordance with just one observer file.')
-        return {}
+        raise 'Can''t calculate concordance with just one observer file.'
+
     else: # calculate concordance pairwise for all combinations
         files = [tag.filename for tag in target_tags]
         concordances = []
@@ -213,23 +215,28 @@ def unique_days_from_dict(data: dict):
         days.append(key.split('_')[3])
     return list(set(days))
 
+def to_pd(data: dict):
+    """
+    Input:
+    [{TURN}_{DATE}_{PHASE}_{WEEKDAY} ... ][{VALUE} ...]
+
+    Output:
+        TURN      DATE PHASE   WEEKDAY       VALUE
+    0  MANHA  20180531   PRE  THURSDAY   84.289277
+    1  MANHA  20180621   POS  THURSDAY  163.545429
+    2  MANHA  20180913    F2  THURSDAY  177.604757
+    3  TARDE  20180531   PRE  THURSDAY   48.526959
+    4  TARDE  20180621   POS  THURSDAY  155.608061
+    """
+    tags_str, values = data[0], data[1]
+
+    # split tags_str by underscore
+    tags_str_splited = [tag.split('_') for tag in tags_str]
+    rows = [splited+[value] for splited, value in zip(tags_str_splited, values)]
+    columns = ['TURN', 'DATE', 'PHASE', 'WEEKDAY', 'VALUE']
+    df = pd.DataFrame(rows, columns=columns)
+    return df
+
 if __name__ == '__main__':
-    # see main.py to an export_to_csv example
-
-    # simple example
-    street = 'oliveira-paiva'
-    observation_session_filenames = [
-        # three observers of the street in the same day
-        os.path.join(street, '20190728-POS_OLIVEIRA-PAIVA_MANHA_ABDALA.csv'),
-        os.path.join(street, '20190728-POS_OLIVEIRA-PAIVA_MANHA_JOSE.csv'),
-        os.path.join(street, '20190728-POS_OLIVEIRA-PAIVA_MANHA_RAQUEL.csv')
-    ]
-
-    data = sessions_dict([Tag(filename) for filename in observation_session_filenames])
-    print(data)
-    print('')
-
-    for day in unique_days_from_dict(data):
-        for day_data in rate_of_bikes(data, day):
-            for key, value in day_data.items():
-                print(key, value)
+    # see "main.py" and "export_to_csv_per_minute" to examples
+    pass

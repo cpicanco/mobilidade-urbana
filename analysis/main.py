@@ -21,6 +21,7 @@ from methods import (
 all_paths = ['rogaciano-leite', 'virgilio-tavora', 'oliveira-paiva']
 all_data = {'rogaciano-leite':None, 'virgilio-tavora':None, 'oliveira-paiva':None}
 
+tables = []
 for path in all_paths:
     root_path = os.path.join(get_data_root_path(), path)
     data_filenames = get_data_filenames(root_path)
@@ -121,3 +122,11 @@ for path in all_paths:
         export_table,
         delimiter="\t",
         fmt="%s")
+    tables.append(export_table)
+
+np.savetxt(
+    os.path.join('all-data.tsv'),
+    np.vstack(tables),
+    delimiter="\t",
+    fmt="%s"
+)
